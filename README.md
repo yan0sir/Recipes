@@ -9,7 +9,8 @@ npm install
 npm run dev
 ```
 
-- Site: http://localhost:4321
+- Live: https://ray-recipes.vercel.app (auto-deploys from `main` on Vercel)
+- Local site: http://localhost:4321
 - Editor: http://localhost:4321/admin/ → **Work with Local Repository** → pick this folder (Chrome or Edge).
 
 ## Add a recipe

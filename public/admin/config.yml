@@ -8,8 +8,8 @@ backend:
   repo: yan0sir/Recipes
   branch: main
 
-site_url: http://localhost:4321
-display_url: http://localhost:4321
+site_url: https://ray-recipes.vercel.app
+display_url: https://ray-recipes.vercel.app
 
 media_folder: public/uploads
 public_folder: /uploads
