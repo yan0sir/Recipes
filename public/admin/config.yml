@@ -4,7 +4,7 @@
 # Online (later): set repo below and the auth Worker base_url, see implementation-plan.md Phase 6.
 backend:
   name: github
-  repo: YOUR-GITHUB-USER/rays-recipes
+  repo: yan0sir/Recipes
   branch: main
   # base_url: https://sveltia-cms-auth.YOUR-SUBDOMAIN.workers.dev
 

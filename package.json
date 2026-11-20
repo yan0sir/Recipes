@@ -11,8 +11,8 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@fontsource-variable/inter-tight": "^5.3.0",
     "@fontsource/google-sans": "^5.3.2",
-    "@fontsource/holtwood-one-sc": "^5.3.0",
     "astro": "^7.4.13"
   },
   "devDependencies": {

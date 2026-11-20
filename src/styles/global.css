@@ -50,11 +50,16 @@ h1,
 h2,
 h3 {
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: 600;
   margin: 0;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
   line-height: 1.05;
   text-wrap: balance;
+}
+
+h1 {
+  letter-spacing: -0.04em;
+  line-height: 0.95;
 }
 
 button,

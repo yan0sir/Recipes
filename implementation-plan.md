@@ -14,7 +14,7 @@ _Companion to [website-brief.md](website-brief.md). Each phase ends in something
 | Content | One Markdown file per recipe in `src/content/recipes/`, photos in `src/assets/recipes/` | Plain files, versioned in git |
 | CMS | **Sveltia CMS** at `/admin` (Decap-compatible config), GitHub backend | Browser editing, free, no database; saves commits to the repo |
 | Hosting | **Cloudflare Pages** (auto-deploy on push) + Sveltia's auth Worker for GitHub login | Free, fast; alternative: Netlify with the same CMS |
-| Fonts | Holtwood One SC + Google Sans via Google Fonts (or self-hosted with `@fontsource` if available) | |
+| Fonts | Inter Tight + Google Sans, self-hosted via Fontsource | |
 | Icons | Lucide (only the ~6 icons needed, inlined SVG) | |
 
 Prerequisites: Node LTS, a GitHub account/repo, a Cloudflare account.
@@ -49,8 +49,8 @@ Prerequisites: Node LTS, a GitHub account/repo, a Cloudflare account.
 ## Phase 1: Design tokens and base layout
 
 1. `tokens.css`: colour tokens, fluid type scale (`clamp()`), spacing scale, breakpoints (600 / 1024).
-2. Load Holtwood One SC and Google Sans; set `font-display: swap`; check Holtwood's wide glyphs at 40px on a 375px screen (adjust `display` min size if "RECIPES" or long titles overflow; allow titles to wrap).
-3. `Base.astro` with **Header band** (aubergine, site name in Holtwood lime, search icon) and **Footer band**; page background set per page (`lime` / `paper`).
+2. Load Inter Tight (headings) and Google Sans (body) via Fontsource; `font-display: swap`.
+3. `Base.astro` with **Header band** (aubergine, site name in Inter Tight lime, search icon) and **Footer band**; page background set per page (`lime` / `paper`).
 4. Focus ring, reduced-motion rule, base typography.
 5. A temporary `/styleguide` page showing colours, type scale, chips, buttons for visual review (delete or `noindex` later).
 
@@ -69,7 +69,7 @@ Prerequisites: Node LTS, a GitHub account/repo, a Cloudflare account.
 
 1. **Title block**: "RECIPES" display + count.
 2. **RecipeTile** component: 1:1 image via `astro:assets` `<Image>` (responsive `srcset`, AVIF/WebP, lazy below the fold), title, tagline, meta row (total time · category).
-3. **Placeholder** component: coloured field cycling aubergine / lime-soft / aubergine-80 with oversized cropped Holtwood initial; used when `photo` is empty (tile and hero variants).
+3. **Placeholder** component: coloured field cycling aubergine / lime-soft / aubergine-80 with oversized cropped Inter Tight initial; used when `photo` is empty (tile and hero variants).
 4. Grid CSS: edge-to-edge, 1/2/3 columns, 1px hairline dividers (use `gap: 1px` over a `--line` background, or borders).
 5. **Category chips** + **search field**: render all tiles at build time with `data-category` and `data-search` (title + tagline + ingredient names, lower-cased); `filter.ts` toggles visibility; sync to URL (`?c=&q=`) and restore on load; empty state.
 6. Sort newest first by `date`; exclude `draft: true`.
@@ -81,7 +81,7 @@ Prerequisites: Node LTS, a GitHub account/repo, a Cloudflare account.
 1. `[slug].astro` with `getStaticPaths` from the collection.
 2. **Hero** (full-bleed, 4:3 mobile / 16:9 desktop, or placeholder at 30vh).
 3. **Title + tagline**, **Meta strip** (Prep · Cook · Total · Serves), category chip linking to `/?c=<category>`.
-4. **IngredientList** (groups, quantity bold, unit, name, muted note) and **StepList** (Holtwood numbers in aubergine squares).
+4. **IngredientList** (groups, quantity bold, unit, name, muted note) and **StepList** (Inter Tight numbers in aubergine squares).
 5. Two-column layout ≥ 1024px with sticky ingredients column; stacked on mobile with "Jump to method".
 6. **Notes** box (only if present).
 7. Prev/next recipe tiles + "All recipes" link.
@@ -141,7 +141,6 @@ Prerequisites: Node LTS, a GitHub account/repo, a Cloudflare account.
 
 ## Risks and notes
 
-- **Holtwood One SC is very wide and heavy.** Long recipe titles on mobile will wrap to 3–4 lines; plan for it (smaller `display` min, `text-wrap: balance`).
 - **Google Sans on Google Fonts:** confirm the family name/availability when scaffolding; fallback is a close grotesk (e.g. Inter) if it isn't loadable.
 - **Mixed units:** the scaler only multiplies the number; "1 packet" → "2 packet" reads oddly. Accept for now, or write units in a form that scales ("packets" handled by simple plural rule later).
 - **CMS auth** is the only part with external setup (GitHub OAuth app + Worker). If it becomes a hassle, Sveltia can also edit a local clone directly in the browser as a stop-gap.

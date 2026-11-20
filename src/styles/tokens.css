@@ -10,7 +10,7 @@
   --line: rgba(59, 31, 58, 0.25);
 
   /* Type */
-  --font-display: 'Holtwood One SC', Georgia, serif;
+  --font-display: 'Inter Tight Variable', 'Inter Tight', system-ui, sans-serif;
   --font-body: 'Google Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
   --fs-display: clamp(2.25rem, 1.4rem + 4.2vw, 4.75rem);

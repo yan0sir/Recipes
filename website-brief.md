@@ -33,7 +33,7 @@ A personal recipe book on the web. Its single job is to make **finding a recipe 
 |---|---|
 | Flat solid colour bands (acid-yellow header/footer, green listing background, white recipe page) | Same structure, own palette: **aubergine** band, **lime** listing, **off-white** recipe page |
 | Edge-to-edge 3-column grid of **square** photos with thin divider lines | Kept. Square tiles, hairline dividers, title + one-liner beneath |
-| Huge single-weight headline (~76px, tight tracking) | Kept, set in **Holtwood One SC** |
+| Huge single-weight headline (~76px, tight tracking) | Kept, set in **Inter Tight** |
 | One-line playful tagline per recipe ("A little dark, a little stormy.") | Kept. One line, max ~70 characters. Replaces any intro story |
 | Full-bleed hero photo on recipe page, then narrow centred text column | Kept |
 | Simple ingredient bullets + numbered directions | Kept, upgraded with checklists, scaler, cook mode |
@@ -67,7 +67,7 @@ Contrast pairs to use: aubergine on lime, lime on aubergine, ink on paper, paper
 
 | Role | Font | Notes |
 |---|---|---|
-| Display / headings | **Holtwood One SC** (Google Fonts) | Heavy slab serif, small caps only. Use for page title, recipe title, section labels. Very wide, so keep sizes in check on mobile and use slight negative tracking (≈ −0.01em) |
+| Display / headings | **Inter Tight** (variable, self-hosted via Fontsource) | Neutral grotesk, SemiBold 600, tight tracking (−0.04em on the display size, −0.02em on smaller headings). Page title, recipe title, section labels, step numbers |
 | Body / UI | **Google Sans** (Google Fonts) | Ingredients, steps, meta, chips, buttons. Regular 400 + Medium 500 |
 
 Type scale (fluid with `clamp()`):
@@ -76,12 +76,12 @@ Type scale (fluid with `clamp()`):
 |---|---|---|
 | `display` | 40 → 76px, line-height 1.0 | "Recipes" page title, recipe title |
 | `h2` | 22 → 28px | "Ingredients", "Method", "Notes" |
-| `card-title` | 18 → 22px (Holtwood) | Tile title |
+| `card-title` | 18 → 22px (Inter Tight) | Tile title |
 | `body` | 17 → 18px, line-height 1.55 | Steps, ingredients |
 | `cook` | 22 → 26px | Step text in cook mode |
 | `small` | 14px | Meta labels, taglines, chips |
 
-Holtwood is small caps only and very heavy: never use it for paragraphs, ingredients, or anything longer than one line.
+Headings use Inter Tight; everything you read while cooking (ingredients, steps) uses Google Sans.
 
 ### 3.3 Spacing, layout, shape
 
@@ -94,7 +94,7 @@ Holtwood is small caps only and very heavy: never use it for paragraphs, ingredi
 
 ### 3.4 Photo placeholders (until photos exist)
 
-Each recipe without a photo gets a generated tile: solid colour field (alternating aubergine / lime-soft / aubergine-80) with the recipe's **initial or a short word in Holtwood**, large and cropped off the edge. Looks deliberate, not "missing image". Same treatment for the recipe hero (shorter height, 30vh).
+Each recipe without a photo gets a generated tile: solid colour field (alternating aubergine / lime-soft / aubergine-80) with the recipe's **initial or a short word in Inter Tight**, large and cropped off the edge. Looks deliberate, not "missing image". Same treatment for the recipe hero (shorter height, 30vh).
 
 ### 3.5 Motion
 
@@ -108,15 +108,15 @@ Line icons, 1.5px stroke, ink/aubergine (e.g. Lucide): search, clock, users, min
 
 | Component | Description |
 |---|---|
-| **Header band** | Aubergine, ~56px. Left: site name in Holtwood (lime). Right: search icon (opens search). Sticky on recipe page. |
+| **Header band** | Aubergine, ~56px. Left: site name in Inter Tight (lime). Right: search icon (opens search). Sticky on recipe page. |
 | **Footer band** | Aubergine, thin. Site name + year only. |
 | **Filter chips** | Pills, aubergine outline on lime; active = solid aubergine with lime text. "All" first. Horizontally scrollable on mobile. |
 | **Search field** | Full-width in the lime area under the title; filters the grid instantly as you type (titles, taglines, ingredients). Clear (x) button. |
-| **Recipe tile** | Square photo/placeholder → title (Holtwood) → one-line tagline (Google Sans, small) → tiny meta row (total time · category). Whole tile is a link. |
+| **Recipe tile** | Square photo/placeholder → title (Inter Tight) → one-line tagline (Google Sans, small) → tiny meta row (total time · category). Whole tile is a link. |
 | **Meta strip** | Row of 3–4 items: Prep · Cook · Total · Serves. Label small/muted, value medium. Separated by hairlines. |
 | **Servings scaler** | `–  4 servings  +` stepper. Recomputes numeric ingredient quantities live; shows fractions (½, ⅓, ¼, ¾). "Reset" when changed. |
 | **Ingredient row** | Checkbox + quantity (bold) + unit + item + note in muted ("diced"). Tap row to check; checked = struck through, `--lime-soft` tint. Optional group headings ("For the sauce"). |
-| **Step row** | Big step number (Holtwood, lime-on-aubergine square) + text. Tap to mark done (dims). |
+| **Step row** | Big step number (Inter Tight, lime-on-aubergine square) + text. Tap to mark done (dims). |
 | **Cook-mode toggle** | Pill button "Cook mode". On: keeps screen awake, enlarges step text, hides hero and header. Off restores. |
 | **Notes box** | Optional, paper with lime left rule. Short tips/substitutions only. |
 | **Empty state** | When search/filter returns nothing: "Nothing here. Try another word." + clear button. |
@@ -147,7 +147,7 @@ No About, no Contact, no tag pages.
 Order, top to bottom:
 1. Header band (sticky).
 2. **Hero**: full-bleed photo or placeholder.
-3. **Title** (display, Holtwood) + **tagline** (one line).
+3. **Title** (display, Inter Tight) + **tagline** (one line).
 4. **Meta strip**: Prep · Cook · Total · Serves (Serves is the scaler). Category chip linking back to the filtered grid.
 5. **Cook-mode** toggle.
 6. **Ingredients**: grouped list with checkboxes; scaler acts on these.
