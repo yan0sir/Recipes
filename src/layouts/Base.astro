@@ -1,0 +1,99 @@
+---
+import '@fontsource/holtwood-one-sc/400.css';
+import '@fontsource/google-sans/400.css';
+import '@fontsource/google-sans/500.css';
+import '../styles/global.css';
+import Icon from '../components/Icon.astro';
+
+interface Props {
+  title?: string;
+  bg?: 'lime' | 'paper';
+  description?: string;
+}
+const { title, bg = 'paper', description = "Ray's personal recipe book." } = Astro.props;
+const fullTitle = title ? `${title} · Ray's Recipes` : "Ray's Recipes";
+const year = new Date().getFullYear();
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#3b1f3a" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>{fullTitle}</title>
+  </head>
+  <body class={`bg-${bg}`}>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="band site-header">
+      <a class="wordmark" href="/">Ray's Recipes</a>
+      <a class="header-search" href="/#search" data-header-search>
+        <Icon name="search" label="Search recipes" />
+      </a>
+    </header>
+    <main id="main">
+      <slot />
+    </main>
+    <footer class="band site-footer">
+      <span class="wordmark wordmark--small">Ray's Recipes</span>
+      <span>{year}</span>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .band {
+    background: var(--aubergine);
+    color: var(--lime);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--gutter);
+  }
+
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    height: var(--header-h);
+  }
+
+  .wordmark {
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    color: var(--lime);
+  }
+
+  .wordmark--small {
+    font-size: 0.875rem;
+  }
+
+  .header-search {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    margin-right: -10px;
+    color: var(--lime);
+  }
+
+  .site-footer {
+    min-height: 64px;
+    font-size: var(--fs-small);
+  }
+
+  :global(body.cook-mode) .site-header {
+    display: none;
+  }
+
+  @media print {
+    .band {
+      display: none !important;
+    }
+  }
+</style>

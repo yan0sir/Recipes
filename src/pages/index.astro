@@ -1,0 +1,244 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import RecipeTile from '../components/RecipeTile.astro';
+import { CATEGORIES } from '../content.config';
+import { CATEGORY_LABELS, getRecipes } from '../lib/recipes';
+
+const recipes = await getRecipes();
+const count = recipes.length;
+---
+
+<Base bg="lime">
+  <section class="intro">
+    <h1>Recipes</h1>
+    <p class="count" data-count aria-live="polite">{count} {count === 1 ? 'recipe' : 'recipes'}</p>
+  </section>
+
+  <section class="controls" aria-label="Find a recipe">
+    <div class="search">
+      <label for="search" class="visually-hidden">Search recipes</label>
+      <Icon name="search" />
+      <input
+        id="search"
+        type="search"
+        placeholder="Search by name or ingredient"
+        autocomplete="off"
+        enterkeyhint="search"
+      />
+      <button type="button" class="clear" data-clear hidden aria-label="Clear search">
+        <Icon name="x" />
+      </button>
+    </div>
+    <div class="chips" role="group" aria-label="Category">
+      <button type="button" class="pill" data-chip="" aria-pressed="true">All</button>
+      {
+        CATEGORIES.map((c) => (
+          <button type="button" class="pill" data-chip={c} aria-pressed="false">
+            {CATEGORY_LABELS[c]}
+          </button>
+        ))
+      }
+    </div>
+  </section>
+
+  <ul class="grid" data-grid>
+    {recipes.map((r, i) => <RecipeTile recipe={r} eager={i < 3} />)}
+  </ul>
+
+  <div class="empty" data-empty hidden>
+    <p>Nothing here. Try another word.</p>
+    <button type="button" class="pill is-solid" data-reset>Show all recipes</button>
+  </div>
+</Base>
+
+<style>
+  .intro {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: var(--s-3) var(--s-5);
+    padding: var(--s-7) var(--gutter) var(--s-5);
+  }
+
+  h1 {
+    font-size: var(--fs-display);
+  }
+
+  .count {
+    margin: 0;
+    font-size: var(--fs-small);
+    font-weight: 500;
+  }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-4);
+    padding: 0 var(--gutter) var(--s-6);
+  }
+
+  .search {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex: 1 1 320px;
+    max-width: 520px;
+    border-bottom: 2px solid var(--aubergine);
+  }
+
+  .search > :global(.icon) {
+    position: absolute;
+    left: 0;
+    pointer-events: none;
+  }
+
+  .search input {
+    width: 100%;
+    min-height: 44px;
+    padding: 0 40px 0 32px;
+    border: 0;
+    background: transparent;
+    color: var(--aubergine);
+    font-size: var(--fs-body);
+  }
+
+  .search input::placeholder {
+    color: var(--aubergine);
+    opacity: 0.6;
+  }
+
+  .search input::-webkit-search-cancel-button {
+    display: none;
+  }
+
+  .search input:focus-visible {
+    outline: none;
+  }
+
+  .search:focus-within {
+    border-bottom-width: 3px;
+    margin-bottom: -1px;
+  }
+
+  .clear {
+    position: absolute;
+    right: 0;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    color: var(--aubergine);
+  }
+
+  .chips {
+    display: flex;
+    gap: var(--s-2);
+    overflow-x: auto;
+    scrollbar-width: none;
+    max-width: 100%;
+    padding: 2px;
+  }
+
+  .grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    border-top: 1px solid var(--line);
+  }
+
+  @media (min-width: 600px) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .empty {
+    padding: var(--s-8) var(--gutter);
+    text-align: center;
+    font-size: var(--fs-h2);
+    font-family: var(--font-display);
+  }
+
+  .empty p {
+    margin: 0 0 var(--s-5);
+  }
+</style>
+
+<script>
+  const input = document.querySelector<HTMLInputElement>('#search')!;
+  const clearBtn = document.querySelector<HTMLButtonElement>('[data-clear]')!;
+  const chips = [...document.querySelectorAll<HTMLButtonElement>('[data-chip]')];
+  const tiles = [...document.querySelectorAll<HTMLElement>('[data-grid] > li')];
+  const empty = document.querySelector<HTMLElement>('[data-empty]')!;
+  const countEl = document.querySelector<HTMLElement>('[data-count]')!;
+  const resetBtn = document.querySelector<HTMLButtonElement>('[data-reset]')!;
+
+  const params = new URLSearchParams(location.search);
+  let category = params.get('c') ?? '';
+  if (!chips.some((c) => c.dataset.chip === category)) category = '';
+  input.value = params.get('q') ?? '';
+
+  function apply() {
+    const words = input.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
+    let shown = 0;
+    for (const tile of tiles) {
+      const okCat = !category || tile.dataset.category === category;
+      const hay = tile.dataset.search ?? '';
+      const okText = words.every((w) => hay.includes(w));
+      const show = okCat && okText;
+      tile.hidden = !show;
+      if (show) shown++;
+    }
+    for (const chip of chips) chip.setAttribute('aria-pressed', String(chip.dataset.chip === category));
+    empty.hidden = shown > 0;
+    clearBtn.hidden = !input.value;
+    countEl.textContent = `${shown} ${shown === 1 ? 'recipe' : 'recipes'}`;
+
+    const next = new URLSearchParams();
+    if (category) next.set('c', category);
+    if (input.value.trim()) next.set('q', input.value.trim());
+    const qs = next.toString();
+    history.replaceState(null, '', qs ? `?${qs}${location.hash}` : location.pathname + location.hash);
+  }
+
+  input.addEventListener('input', apply);
+  clearBtn.addEventListener('click', () => {
+    input.value = '';
+    apply();
+    input.focus();
+  });
+  for (const chip of chips) {
+    chip.addEventListener('click', () => {
+      category = chip.dataset.chip ?? '';
+      apply();
+    });
+  }
+  resetBtn.addEventListener('click', () => {
+    category = '';
+    input.value = '';
+    apply();
+  });
+
+  // Header search icon: focus the field instead of jumping.
+  document.querySelector('[data-header-search]')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    input.scrollIntoView({ block: 'center' });
+    input.focus();
+  });
+  if (location.hash === '#search') input.focus();
+
+  apply();
+</script>

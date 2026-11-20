@@ -1,0 +1,58 @@
+---
+// Colour-block stand-in for a missing photo: big cropped initial on a flat field.
+import { placeholderVariant } from '../lib/recipes';
+
+interface Props {
+  title: string;
+  slug: string;
+  variant?: 'tile' | 'hero';
+}
+const { title, slug, variant = 'tile' } = Astro.props;
+const tone = placeholderVariant(slug);
+const word = title.replace(/[^A-Za-z]/g, '').slice(0, 1) || 'R';
+---
+
+<div class={`ph ph--${variant} ph--tone${tone}`} aria-hidden="true">
+  <span>{word}</span>
+</div>
+
+<style>
+  .ph {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: var(--font-display);
+  }
+
+  .ph span {
+    position: absolute;
+    line-height: 0.8;
+    right: -0.08em;
+    bottom: -0.12em;
+  }
+
+  .ph--tile span {
+    font-size: clamp(10rem, 30vw, 22rem);
+  }
+
+  .ph--hero span {
+    font-size: clamp(12rem, 40vw, 36rem);
+    bottom: -0.2em;
+  }
+
+  .ph--tone0 {
+    background: var(--aubergine);
+    color: var(--lime);
+  }
+
+  .ph--tone1 {
+    background: var(--lime-soft);
+    color: var(--aubergine);
+  }
+
+  .ph--tone2 {
+    background: var(--aubergine-80);
+    color: var(--lime-soft);
+  }
+</style>

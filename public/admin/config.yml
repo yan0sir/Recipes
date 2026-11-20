@@ -1,0 +1,76 @@
+# Sveltia CMS config. Locally: open http://localhost:4321/admin/ in Chrome or Edge
+# and choose "Work with Local Repository", then pick this project folder.
+# Recipe photos go to src/assets/recipes (set per collection below); the global folder is a fallback.
+# Online (later): set repo below and the auth Worker base_url, see implementation-plan.md Phase 6.
+backend:
+  name: github
+  repo: YOUR-GITHUB-USER/rays-recipes
+  branch: main
+  # base_url: https://sveltia-cms-auth.YOUR-SUBDOMAIN.workers.dev
+
+site_url: http://localhost:4321
+display_url: http://localhost:4321
+
+media_folder: public/uploads
+public_folder: /uploads
+
+collections:
+  - name: recipes
+    label: Recipes
+    label_singular: Recipe
+    folder: src/content/recipes
+    create: true
+    slug: '{{slug}}'
+    identifier_field: title
+    summary: '{{title}} · {{category}}'
+    sortable_fields: [title, date, category]
+    media_folder: ../../assets/recipes
+    public_folder: ../../assets/recipes
+    fields:
+      - { name: title, label: Title, widget: string }
+      - name: tagline
+        label: Tagline
+        widget: string
+        hint: One line, 70 characters max. No backstory.
+        pattern: ['^.{1,70}$', 'Keep it to 70 characters']
+      - name: category
+        label: Category
+        widget: select
+        options:
+          - { label: Savory, value: savory }
+          - { label: Sweet, value: sweet }
+          - { label: Drink, value: drink }
+      - { name: photo, label: Photo, widget: image, required: false }
+      - { name: photoAlt, label: Photo description, widget: string, required: false, hint: What's in the photo, for screen readers. }
+      - { name: prepMinutes, label: Prep (minutes), widget: number, value_type: int, required: false, min: 0 }
+      - { name: cookMinutes, label: Cook (minutes), widget: number, value_type: int, required: false, min: 0 }
+      - { name: servings, label: Servings, widget: number, value_type: int, default: 2, min: 1 }
+      - name: ingredientGroups
+        label: Ingredients
+        label_singular: Ingredient group
+        widget: list
+        min: 1
+        hint: One group is fine. Add more for parts like "For the sauce".
+        summary: '{{fields.heading}}'
+        fields:
+          - { name: heading, label: Group heading (optional), widget: string, required: false }
+          - name: items
+            label: Items
+            label_singular: Ingredient
+            widget: list
+            min: 1
+            summary: '{{fields.quantity}} {{fields.unit}} {{fields.name}}'
+            fields:
+              - { name: quantity, label: Quantity, widget: string, required: false, hint: '2, 1/2, 1 1/2 or 1-2. Leave blank for "to taste".' }
+              - { name: unit, label: Unit, widget: string, required: false, hint: 'g, cup, tbsp, packet…' }
+              - { name: name, label: Ingredient, widget: string }
+              - { name: note, label: Note, widget: string, required: false, hint: 'diced, optional…' }
+      - name: steps
+        label: Method
+        label_singular: Step
+        widget: list
+        min: 1
+        field: { name: step, label: Step, widget: text }
+      - { name: notes, label: Notes, widget: text, required: false, hint: Tips, swaps, storage. Short. }
+      - { name: date, label: Date added, widget: datetime, time_format: false, format: 'YYYY-MM-DD', default: '{{now}}' }
+      - { name: draft, label: Draft (hide from site), widget: boolean, default: false, required: false }

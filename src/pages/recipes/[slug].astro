@@ -1,0 +1,781 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import Placeholder from '../../components/Placeholder.astro';
+import { formatNumber, parseQuantity } from '../../lib/fractions';
+import {
+  CATEGORY_LABELS,
+  formatMinutes,
+  getRecipes,
+  totalMinutes,
+  type Recipe,
+} from '../../lib/recipes';
+
+export async function getStaticPaths() {
+  const recipes = await getRecipes();
+  return recipes.map((recipe, i) => ({
+    params: { slug: recipe.id },
+    props: {
+      recipe,
+      newer: recipes[i - 1] ?? null,
+      older: recipes[i + 1] ?? null,
+    },
+  }));
+}
+
+interface Props {
+  recipe: Recipe;
+  newer: Recipe | null;
+  older: Recipe | null;
+}
+const { recipe, newer, older } = Astro.props;
+const { data, id } = recipe;
+const total = totalMinutes(recipe);
+
+function displayQty(raw: string): string {
+  const parsed = parseQuantity(raw);
+  return parsed ? parsed.map(formatNumber).join('–') : raw;
+}
+---
+
+<Base title={data.title} description={data.tagline}>
+  <div class="hero" class:list={{ 'hero--ph': !data.photo }}>
+    {
+      data.photo ? (
+        <Image
+          src={data.photo}
+          alt={data.photoAlt || ''}
+          widths={[640, 1024, 1600, 2200]}
+          sizes="100vw"
+          loading="eager"
+          fetchpriority="high"
+        />
+      ) : (
+        <Placeholder title={data.title} slug={id} variant="hero" />
+      )
+    }
+  </div>
+
+  <article class="recipe" data-recipe={id} data-servings={data.servings}>
+    <header class="head">
+      <a class="pill" href={`/?c=${data.category}`}>{CATEGORY_LABELS[data.category]}</a>
+      <h1>{data.title}</h1>
+      <p class="tagline">{data.tagline}</p>
+
+      <dl class="meta">
+        <div>
+          <dt>Prep</dt>
+          <dd>{formatMinutes(data.prepMinutes)}</dd>
+        </div>
+        <div>
+          <dt>Cook</dt>
+          <dd>{formatMinutes(data.cookMinutes)}</dd>
+        </div>
+        <div>
+          <dt>Total</dt>
+          <dd>{formatMinutes(total)}</dd>
+        </div>
+        <div class="serves">
+          <dt>Serves</dt>
+          <dd>
+            <div class="stepper">
+              <button type="button" data-scale="-1" aria-label="Fewer servings">
+                <Icon name="minus" />
+              </button>
+              <output data-servings-out aria-live="polite">{data.servings}</output>
+              <button type="button" data-scale="1" aria-label="More servings">
+                <Icon name="plus" />
+              </button>
+            </div>
+            <button type="button" class="reset" data-scale-reset hidden>Reset</button>
+          </dd>
+        </div>
+      </dl>
+
+      <div class="tools">
+        <button type="button" class="pill" data-cook aria-pressed="false">
+          <Icon name="flame" /> Cook mode
+        </button>
+        <button type="button" class="link-btn" data-clear-ticks hidden>Clear ticks</button>
+      </div>
+      <p class="cook-note" data-cook-note hidden>Your browser may still let the screen sleep.</p>
+    </header>
+
+    <div class="body">
+      <section class="ingredients" aria-labelledby="ing-h">
+        <div class="ingredients-inner">
+          <h2 id="ing-h">Ingredients</h2>
+          <a class="jump" href="#method">Jump to method</a>
+          {
+            data.ingredientGroups.map((group, gi) => (
+              <div class="group">
+                {group.heading && <h3>{group.heading}</h3>}
+                <ul>
+                  {group.items.map((item, ii) => (
+                    <li>
+                      <label class="check">
+                        <input type="checkbox" data-tick={`i-${gi}-${ii}`} />
+                        <span class="ing">
+                          {item.quantity && (
+                            <span class="qty" data-qty={item.quantity}>
+                              {displayQty(item.quantity)}
+                            </span>
+                          )}
+                          {item.unit && <span class="unit">{item.unit}</span>}
+                          <span class="name">{item.name}</span>
+                          {item.note && <span class="note">{item.note}</span>}
+                        </span>
+                      </label>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          }
+        </div>
+      </section>
+
+      <section class="method" id="method" aria-labelledby="method-h">
+        <h2 id="method-h">Method</h2>
+        <ol>
+          {
+            data.steps.map((step, si) => (
+              <li>
+                <label class="step">
+                  <input type="checkbox" class="visually-hidden" data-tick={`s-${si}`} />
+                  <span class="num" aria-hidden="true">{si + 1}</span>
+                  <span class="step-text">
+                    <span class="visually-hidden">Step {si + 1}: </span>
+                    {step}
+                  </span>
+                </label>
+              </li>
+            ))
+          }
+        </ol>
+
+        {
+          data.notes && (
+            <aside class="notes">
+              <h2>Notes</h2>
+              <p>{data.notes}</p>
+            </aside>
+          )
+        }
+      </section>
+    </div>
+
+    <nav class="more" aria-label="More recipes">
+      <a class="back" href="/"><Icon name="arrow-left" /> All recipes</a>
+      <div class="neighbours">
+        {
+          newer && (
+            <a class="neighbour" href={`/recipes/${newer.id}/`}>
+              <span class="dir">Newer</span>
+              <span class="n-title">{newer.data.title}</span>
+            </a>
+          )
+        }
+        {
+          older && (
+            <a class="neighbour" href={`/recipes/${older.id}/`}>
+              <span class="dir">Older</span>
+              <span class="n-title">{older.data.title}</span>
+            </a>
+          )
+        }
+      </div>
+    </nav>
+  </article>
+</Base>
+
+<style>
+  /* Hero */
+  .hero {
+    aspect-ratio: 4 / 3;
+    max-height: 70vh;
+    width: 100%;
+    overflow: hidden;
+    background: var(--lime-soft);
+  }
+
+  .hero :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero--ph {
+    aspect-ratio: auto;
+    height: 30vh;
+    min-height: 200px;
+  }
+
+  @media (min-width: 768px) {
+    .hero {
+      aspect-ratio: 16 / 9;
+    }
+    .hero--ph {
+      aspect-ratio: auto;
+    }
+  }
+
+  /* Head */
+  .recipe {
+    max-width: var(--wide);
+    margin: 0 auto;
+    padding: 0 var(--gutter);
+  }
+
+  .head {
+    max-width: var(--read);
+    padding: var(--s-7) 0 var(--s-6);
+  }
+
+  @media (min-width: 1024px) {
+    .head {
+      max-width: none;
+    }
+  }
+
+  h1 {
+    font-size: var(--fs-display);
+    margin-top: var(--s-5);
+    overflow-wrap: anywhere;
+  }
+
+  .tagline {
+    margin: var(--s-4) 0 0;
+    font-size: var(--fs-h2);
+    line-height: 1.3;
+    color: var(--ink-muted);
+  }
+
+  .meta {
+    display: grid;
+    grid-template-columns: repeat(3, auto) 1fr;
+    margin: var(--s-6) 0 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .meta > div {
+    padding: var(--s-3) var(--s-5) var(--s-3) 0;
+    margin-right: var(--s-5);
+    border-right: 1px solid var(--line);
+  }
+
+  .meta > div:last-child {
+    border-right: 0;
+    margin-right: 0;
+  }
+
+  @media (max-width: 520px) {
+    .meta {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .meta > div {
+      padding-right: var(--s-3);
+      margin-right: var(--s-3);
+    }
+    .meta > div:nth-child(3) {
+      border-right: 0;
+      margin-right: 0;
+    }
+    .meta > .serves {
+      grid-column: 1 / -1;
+      border-top: 1px solid var(--line);
+    }
+  }
+
+  dt {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+
+  dd {
+    margin: var(--s-1) 0 0;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+  }
+
+  .stepper {
+    display: inline-flex;
+    align-items: center;
+    border: 1.5px solid var(--aubergine);
+    border-radius: 999px;
+  }
+
+  .stepper button {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 36px;
+    border: 0;
+    background: none;
+    color: var(--aubergine);
+    cursor: pointer;
+    border-radius: 999px;
+  }
+
+  .stepper button:hover {
+    background: rgba(59, 31, 58, 0.08);
+  }
+
+  .stepper button:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+
+  .stepper output {
+    min-width: 2ch;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .reset,
+  .link-btn {
+    border: 0;
+    background: none;
+    padding: var(--s-2) 0;
+    font-size: var(--fs-small);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+    color: var(--ink-muted);
+  }
+
+  .tools {
+    display: flex;
+    align-items: center;
+    gap: var(--s-5);
+    margin-top: var(--s-5);
+  }
+
+  .cook-note {
+    margin: var(--s-2) 0 0;
+    font-size: var(--fs-small);
+    color: var(--ink-muted);
+  }
+
+  /* Body */
+  .body {
+    display: grid;
+    gap: var(--s-7);
+    padding-bottom: var(--s-8);
+  }
+
+  @media (min-width: 1024px) {
+    .body {
+      grid-template-columns: minmax(280px, 1fr) 2fr;
+      gap: var(--s-8);
+    }
+    .ingredients-inner {
+      position: sticky;
+      top: calc(var(--header-h) + var(--s-5));
+    }
+    .jump {
+      display: none;
+    }
+  }
+
+  .body h2 {
+    font-size: var(--fs-h2);
+    margin-bottom: var(--s-4);
+  }
+
+  .jump {
+    display: inline-block;
+    margin-bottom: var(--s-4);
+    font-size: var(--fs-small);
+    color: var(--ink-muted);
+  }
+
+  .group + .group {
+    margin-top: var(--s-5);
+  }
+
+  .group h3 {
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: var(--s-2);
+  }
+
+  .ingredients ul,
+  .method ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ingredients li {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .check {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--s-3);
+    padding: var(--s-3) var(--s-2);
+    margin: 0 calc(var(--s-2) * -1);
+    cursor: pointer;
+    transition: background var(--ease);
+  }
+
+  .check input {
+    appearance: none;
+    flex: none;
+    width: 20px;
+    height: 20px;
+    margin: 3px 0 0;
+    border: 1.5px solid var(--aubergine);
+    background: var(--paper);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+  }
+
+  .check input:checked {
+    background: var(--aubergine);
+  }
+
+  .check input:checked::after {
+    content: '';
+    width: 10px;
+    height: 5px;
+    border-left: 2px solid var(--lime);
+    border-bottom: 2px solid var(--lime);
+    transform: translateY(-1px) rotate(-45deg);
+  }
+
+  .check:has(input:checked) {
+    background: var(--lime-soft);
+  }
+
+  .check:has(input:checked) .ing {
+    text-decoration: line-through;
+    text-decoration-color: rgba(28, 18, 32, 0.5);
+    color: var(--ink-muted);
+  }
+
+  .qty {
+    font-weight: 500;
+  }
+
+  .qty,
+  .unit {
+    margin-right: 0.3em;
+  }
+
+  .note {
+    color: var(--ink-muted);
+  }
+
+  .note::before {
+    content: ', ';
+  }
+
+  /* Steps */
+  .method li + li {
+    margin-top: var(--s-2);
+  }
+
+  .step {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    gap: var(--s-4);
+    align-items: start;
+    padding: var(--s-3) 0;
+    cursor: pointer;
+  }
+
+  .num {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    background: var(--aubergine);
+    color: var(--lime);
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    line-height: 1;
+    transition: background var(--ease), color var(--ease);
+  }
+
+  .step input:focus-visible + .num {
+    outline: 3px solid var(--aubergine);
+    outline-offset: 2px;
+  }
+
+  .step-text {
+    padding-top: 8px;
+    transition: opacity var(--ease);
+  }
+
+  .step:has(input:checked) .num {
+    background: var(--lime-soft);
+    color: var(--aubergine);
+  }
+
+  .step:has(input:checked) .step-text {
+    opacity: 0.45;
+  }
+
+  .notes {
+    margin-top: var(--s-7);
+    padding: var(--s-4) var(--s-5);
+    border-left: 6px solid var(--lime);
+    background: rgba(200, 230, 74, 0.12);
+  }
+
+  .notes h2 {
+    margin-bottom: var(--s-2);
+  }
+
+  .notes p {
+    margin: 0;
+    white-space: pre-line;
+  }
+
+  /* More */
+  .more {
+    border-top: 1px solid var(--line);
+    padding: var(--s-6) 0 var(--s-8);
+    display: grid;
+    gap: var(--s-5);
+  }
+
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .back:hover {
+    text-decoration: underline;
+  }
+
+  .neighbours {
+    display: grid;
+    gap: var(--s-3);
+  }
+
+  @media (min-width: 600px) {
+    .neighbours {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .neighbour {
+    display: grid;
+    gap: var(--s-1);
+    padding: var(--s-4) var(--s-5);
+    background: var(--lime);
+    color: var(--aubergine);
+    text-decoration: none;
+  }
+
+  .neighbour:hover .n-title {
+    text-decoration: underline;
+  }
+
+  .dir {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .n-title {
+    font-family: var(--font-display);
+    font-size: var(--fs-card);
+    line-height: 1.15;
+  }
+
+  /* Cook mode */
+  :global(body.cook-mode) .hero,
+  :global(body.cook-mode) .tagline,
+  :global(body.cook-mode) .more {
+    display: none;
+  }
+
+  :global(body.cook-mode) .head {
+    padding-top: var(--s-5);
+  }
+
+  :global(body.cook-mode) .tools {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--paper);
+    padding: var(--s-3) 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  :global(body.cook-mode) .step-text,
+  :global(body.cook-mode) .ing {
+    font-size: var(--fs-cook);
+    line-height: 1.45;
+  }
+
+  :global(body.cook-mode) .method li + li {
+    margin-top: var(--s-5);
+  }
+
+  /* Print */
+  @media print {
+    .hero,
+    .tools,
+    .cook-note,
+    .more,
+    .stepper button,
+    .reset,
+    .jump,
+    .pill,
+    .check input,
+    .num {
+      display: none !important;
+    }
+    .body {
+      grid-template-columns: 1fr 2fr;
+    }
+    .ingredients-inner {
+      position: static;
+    }
+    .step {
+      grid-template-columns: 1fr;
+    }
+    .step .visually-hidden {
+      position: static !important;
+      width: auto;
+      height: auto;
+      margin: 0;
+      clip: auto;
+      font-weight: 500;
+    }
+    .check:has(input:checked) {
+      background: none;
+    }
+  }
+</style>
+
+<script>
+  import { scaleQuantity } from '../../lib/fractions';
+
+  const article = document.querySelector<HTMLElement>('[data-recipe]')!;
+  const slug = article.dataset.recipe!;
+  const base = Number(article.dataset.servings);
+
+  /* ---------- Servings scaler ---------- */
+  const out = article.querySelector<HTMLOutputElement>('[data-servings-out]')!;
+  const minus = article.querySelector<HTMLButtonElement>('[data-scale="-1"]')!;
+  const plus = article.querySelector<HTMLButtonElement>('[data-scale="1"]')!;
+  const reset = article.querySelector<HTMLButtonElement>('[data-scale-reset]')!;
+  const qtys = [...article.querySelectorAll<HTMLElement>('[data-qty]')];
+  let servings = base;
+
+  function renderServings() {
+    out.textContent = String(servings);
+    minus.disabled = servings <= 1;
+    reset.hidden = servings === base;
+    const factor = servings / base;
+    for (const el of qtys) el.textContent = scaleQuantity(el.dataset.qty, factor);
+  }
+
+  minus.addEventListener('click', () => {
+    servings = Math.max(1, servings - 1);
+    renderServings();
+  });
+  plus.addEventListener('click', () => {
+    servings += 1;
+    renderServings();
+  });
+  reset.addEventListener('click', () => {
+    servings = base;
+    renderServings();
+  });
+  renderServings();
+
+  /* ---------- Tick-off checklists (remembered per recipe) ---------- */
+  const key = `rays-recipes:ticks:${slug}`;
+  const boxes = [...article.querySelectorAll<HTMLInputElement>('[data-tick]')];
+  const clearTicks = article.querySelector<HTMLButtonElement>('[data-clear-ticks]')!;
+
+  function load(): string[] {
+    try {
+      return JSON.parse(localStorage.getItem(key) ?? '[]');
+    } catch {
+      return [];
+    }
+  }
+
+  function save() {
+    const ticked = boxes.filter((b) => b.checked).map((b) => b.dataset.tick!);
+    clearTicks.hidden = ticked.length === 0;
+    try {
+      if (ticked.length) localStorage.setItem(key, JSON.stringify(ticked));
+      else localStorage.removeItem(key);
+    } catch {
+      /* storage unavailable: ticks just won't persist */
+    }
+  }
+
+  const saved = new Set(load());
+  for (const box of boxes) {
+    box.checked = saved.has(box.dataset.tick!);
+    box.addEventListener('change', save);
+  }
+  clearTicks.addEventListener('click', () => {
+    for (const box of boxes) box.checked = false;
+    save();
+  });
+  save();
+
+  /* ---------- Cook mode (screen wake lock) ---------- */
+  const cookBtn = article.querySelector<HTMLButtonElement>('[data-cook]')!;
+  const cookNote = article.querySelector<HTMLElement>('[data-cook-note]')!;
+  let lock: WakeLockSentinel | null = null;
+  let cooking = false;
+
+  async function requestLock() {
+    if (!('wakeLock' in navigator)) {
+      cookNote.hidden = false;
+      return;
+    }
+    try {
+      lock = await navigator.wakeLock.request('screen');
+    } catch {
+      cookNote.hidden = false;
+    }
+  }
+
+  async function setCooking(on: boolean) {
+    cooking = on;
+    document.body.classList.toggle('cook-mode', on);
+    cookBtn.setAttribute('aria-pressed', String(on));
+    if (on) {
+      await requestLock();
+    } else {
+      cookNote.hidden = true;
+      await lock?.release().catch(() => {});
+      lock = null;
+    }
+  }
+
+  cookBtn.addEventListener('click', () => setCooking(!cooking));
+  document.addEventListener('visibilitychange', () => {
+    if (cooking && document.visibilityState === 'visible') requestLock();
+  });
+</script>

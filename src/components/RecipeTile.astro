@@ -1,0 +1,118 @@
+---
+import { Image } from 'astro:assets';
+import Placeholder from './Placeholder.astro';
+import { CATEGORY_LABELS, formatMinutes, totalMinutes, type Recipe } from '../lib/recipes';
+
+interface Props {
+  recipe: Recipe;
+  eager?: boolean;
+}
+const { recipe, eager = false } = Astro.props;
+const { data, id } = recipe;
+const total = totalMinutes(recipe);
+const searchText = [
+  data.title,
+  data.tagline,
+  ...data.ingredientGroups.flatMap((g) => g.items.map((i) => i.name)),
+]
+  .join(' ')
+  .toLowerCase();
+---
+
+<li class="tile" data-category={data.category} data-search={searchText}>
+  <a href={`/recipes/${id}/`}>
+    <div class="tile-media">
+      {
+        data.photo ? (
+          <Image
+            src={data.photo}
+            alt={data.photoAlt || ''}
+            widths={[400, 700, 1000]}
+            sizes="(min-width: 1024px) 33vw, (min-width: 600px) 50vw, 100vw"
+            loading={eager ? 'eager' : 'lazy'}
+          />
+        ) : (
+          <Placeholder title={data.title} slug={id} />
+        )
+      }
+    </div>
+    <div class="tile-text">
+      <h2 class="tile-title">{data.title}</h2>
+      <p class="tile-tagline">{data.tagline}</p>
+      <p class="tile-meta">
+        {total != null && <span>{formatMinutes(total)}</span>}
+        <span>{CATEGORY_LABELS[data.category]}</span>
+      </p>
+    </div>
+  </a>
+</li>
+
+<style>
+  .tile {
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .tile a {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    text-decoration: none;
+    color: var(--aubergine);
+  }
+
+  .tile-media {
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: var(--lime-soft);
+  }
+
+  .tile-media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 300ms ease;
+  }
+
+  @media (hover: hover) {
+    .tile a:hover :global(img) {
+      transform: scale(1.03);
+    }
+    .tile a:hover .tile-title {
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+    }
+  }
+
+  .tile-text {
+    padding: var(--s-4) var(--s-4) var(--s-5);
+  }
+
+  .tile-title {
+    font-size: var(--fs-card);
+    line-height: 1.15;
+  }
+
+  .tile-tagline {
+    margin: var(--s-2) 0 0;
+    font-size: var(--fs-small);
+    line-height: 1.4;
+  }
+
+  .tile-meta {
+    display: flex;
+    gap: var(--s-3);
+    margin: var(--s-3) 0 0;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    opacity: 0.75;
+  }
+
+  .tile-meta span + span::before {
+    content: '·';
+    margin-right: var(--s-3);
+  }
+</style>

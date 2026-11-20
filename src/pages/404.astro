@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Not found" bg="lime">
+  <section class="nf">
+    <h1>Not on the menu</h1>
+    <a class="pill is-solid" href="/">All recipes</a>
+  </section>
+</Base>
+
+<style>
+  .nf {
+    padding: var(--s-9) var(--gutter);
+    display: grid;
+    gap: var(--s-6);
+    justify-items: start;
+  }
+
+  h1 {
+    font-size: var(--fs-display);
+  }
+</style>

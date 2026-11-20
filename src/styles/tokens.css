@@ -1,0 +1,39 @@
+:root {
+  /* Colour */
+  --aubergine: #3b1f3a;
+  --aubergine-80: #5a3a58;
+  --lime: #c8e64a;
+  --lime-soft: #e4f3a6;
+  --paper: #fbf9f3;
+  --ink: #1c1220;
+  --ink-muted: #6b5e6a;
+  --line: rgba(59, 31, 58, 0.25);
+
+  /* Type */
+  --font-display: 'Holtwood One SC', Georgia, serif;
+  --font-body: 'Google Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --fs-display: clamp(2.25rem, 1.4rem + 4.2vw, 4.75rem);
+  --fs-h2: clamp(1.25rem, 1.1rem + 0.6vw, 1.75rem);
+  --fs-card: clamp(1rem, 0.9rem + 0.5vw, 1.25rem);
+  --fs-body: clamp(1.0625rem, 1.03rem + 0.15vw, 1.125rem);
+  --fs-cook: clamp(1.375rem, 1.25rem + 0.6vw, 1.625rem);
+  --fs-small: 0.875rem;
+
+  /* Space */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 48px;
+  --s-8: 64px;
+  --s-9: 96px;
+
+  --gutter: clamp(16px, 4vw, 40px);
+  --header-h: 56px;
+  --read: 680px;
+  --wide: 1160px;
+  --ease: 150ms ease;
+}
