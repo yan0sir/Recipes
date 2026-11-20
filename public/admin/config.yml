@@ -1,12 +1,12 @@
 # Sveltia CMS config. Locally: open http://localhost:4321/admin/ in Chrome or Edge
 # and choose "Work with Local Repository", then pick this project folder.
 # Recipe photos go to src/assets/recipes (set per collection below); the global folder is a fallback.
-# Online (later): set repo below and the auth Worker base_url, see implementation-plan.md Phase 6.
+# Online: open /admin/ on the live site and choose "Sign In Using Access Token" with a GitHub
+# fine-grained token (Contents: read & write on yan0sir/Recipes only). See implementation-plan.md Phase 6.
 backend:
   name: github
   repo: yan0sir/Recipes
   branch: main
-  # base_url: https://sveltia-cms-auth.YOUR-SUBDOMAIN.workers.dev
 
 site_url: http://localhost:4321
 display_url: http://localhost:4321

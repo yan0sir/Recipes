@@ -2,7 +2,7 @@
 
 _Companion to [website-brief.md](website-brief.md). Each phase ends in something you can open and check._
 
-> **Status (2026-11-20):** Phases 0–5 built locally, plus the local half of Phase 6 (`/admin` works with "Work with Local Repository"). Not done: GitHub repo + auth Worker (Phase 6), deploy (Phase 7), real recipes and photos (Phase 8). The site uses Astro 7. The admin page is an Astro route (`src/pages/admin/index.astro`) because the dev server doesn't serve `public/admin/index.html`.
+> **Status (2026-11-20):** Phases 0–5 built; code on GitHub (`yan0sir/Recipes`). Hosting switched from Cloudflare Pages to **Vercel**. Editor login uses a GitHub access token (no auth Worker). Remaining: Vercel import, live check, real recipes and photos (Phase 8). The admin page is an Astro route (`src/pages/admin/index.astro`) because the dev server doesn't serve `public/admin/index.html`.
 
 ## Stack (decided)
 
@@ -13,11 +13,11 @@ _Companion to [website-brief.md](website-brief.md). Each phase ends in something
 | Interactivity | Small vanilla TS scripts / Astro islands | Scaler, checklists, cook mode, search are each < 100 lines |
 | Content | One Markdown file per recipe in `src/content/recipes/`, photos in `src/assets/recipes/` | Plain files, versioned in git |
 | CMS | **Sveltia CMS** at `/admin` (Decap-compatible config), GitHub backend | Browser editing, free, no database; saves commits to the repo |
-| Hosting | **Cloudflare Pages** (auto-deploy on push) + Sveltia's auth Worker for GitHub login | Free, fast; alternative: Netlify with the same CMS |
+| Hosting | **Vercel** (Git integration: auto-deploy on every push to `main`) | Free Hobby plan, auto-detects Astro; Node pinned via `engines` in package.json |
 | Fonts | Inter Tight + Google Sans, self-hosted via Fontsource | |
 | Icons | Lucide (only the ~6 icons needed, inlined SVG) | |
 
-Prerequisites: Node LTS, a GitHub account/repo, a Cloudflare account.
+Prerequisites: Node LTS, a GitHub account/repo, a Vercel account.
 
 ---
 
@@ -99,20 +99,21 @@ Prerequisites: Node LTS, a GitHub account/repo, a Cloudflare account.
 
 ## Phase 6: CMS (`/admin`)
 
-1. Add `public/admin/index.html` loading Sveltia CMS and `public/admin/config.yml`:
-   - backend: `github`, repo, branch `main`, `base_url` → the auth Worker.
-   - `media_folder: src/assets/recipes`, `public_folder` matching Astro's relative image imports.
-   - Collection `recipes` → folder `src/content/recipes`, slug `{{slug}}`, fields mirroring the schema (list widget for ingredient groups → items with quantity/unit/name/note; list of strings for steps; select for category; boolean draft; image with alt text).
-2. Deploy the Sveltia CMS auth Worker on Cloudflare; create a GitHub OAuth app pointing to it.
-3. Test: create, edit, upload photo, toggle draft, delete. Confirm commits land in the repo and the schema validates (a bad entry should fail the build, not the live site).
+1. `src/pages/admin/index.astro` loads Sveltia CMS; `public/admin/config.yml` defines the backend (`github`, `yan0sir/Recipes`, `main`) and the recipe fields, mirroring the schema.
+2. **Login: GitHub access token** (single user, no OAuth app or auth server needed). Create a fine-grained token at GitHub → Settings → Developer settings → Fine-grained tokens: repository access *only* `yan0sir/Recipes`, permission *Contents: Read and write*, expiry of your choice. On `/admin/` choose **Sign In Using Access Token** and paste it (the browser remembers it). Renew when it expires.
+3. Locally, "Work with Local Repository" still works without any token.
+4. Test: create, edit, upload photo, toggle draft. Each save is a commit to `main`, which triggers a Vercel rebuild.
+
+_If you later want "Sign in with GitHub" instead of a token: create a GitHub OAuth app and deploy the Sveltia CMS auth Worker (Cloudflare, free), then set `base_url` in config.yml._
 
 **Done when:** a recipe added from a phone browser appears on the live site after the rebuild.
 
-## Phase 7: Deploy
+## Phase 7: Deploy (Vercel)
 
-1. Connect the GitHub repo to Cloudflare Pages (build `npm run build`, output `dist`).
-2. Optional custom domain.
-3. Verify `noindex`, `robots.txt`, 404 page, and that `/admin` requires GitHub login.
+1. vercel.com → **Add New… → Project** → import `yan0sir/Recipes` (give Vercel's GitHub app access to that repo only).
+2. Framework preset **Astro** (auto-detected); build `npm run build`; output `dist`. Node 24 comes from `engines`.
+3. Deploy; then set `site` in `astro.config.mjs` and `site_url`/`display_url` in `config.yml` to the Vercel address and push.
+4. Verify `noindex`, `robots.txt`, 404 page, recipe pages, and `/admin`.
 
 ## Phase 8: Real content and polish
 
@@ -136,7 +137,7 @@ Prerequisites: Node LTS, a GitHub account/repo, a Cloudflare account.
 | 1 | 0 + 1 | Repo, tokens, shell, styleguide |
 | 2 | 2 + 3 | Schema, dummy data, working home grid |
 | 3 | 4 + 5 | Full recipe page with scaler, checklists, cook mode |
-| 4 | 6 + 7 | CMS live, site deployed |
+| 4 | 6 + 7 | Site live on Vercel, editor working online |
 | 5 | 8 | Real recipes, photos, polish |
 
 ## Risks and notes

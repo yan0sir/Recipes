@@ -166,7 +166,7 @@ Lime page, display text "NOT ON THE MENU", link back to grid.
 
 ### 4.4 Admin (`/admin`)
 
-Browser-based editor (git-based CMS). Form fields map 1:1 to the content model below. Photo upload goes straight into the repo. Saving publishes automatically (site rebuilds in ~1 minute).
+Browser-based editor (git-based CMS). Form fields map 1:1 to the content model below. Photo upload goes straight into the repo. Saving publishes automatically (Vercel rebuilds in ~1 minute). Login with a GitHub access token scoped to this repo only.
 
 ---
 
