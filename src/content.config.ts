@@ -25,6 +25,8 @@ const recipes = defineCollection({
       category: z.enum(CATEGORIES),
       photo: image().optional(),
       photoAlt: z.string().optional().default(''),
+      sourceUrl: z.string().url().optional(),
+      sourceLabel: z.string().optional().default(''),
       prepMinutes: z.number().int().nonnegative().optional(),
       cookMinutes: z.number().int().nonnegative().optional(),
       servings: z.number().int().positive(),

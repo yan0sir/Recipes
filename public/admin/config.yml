@@ -41,6 +41,8 @@ collections:
           - { label: Sweet, value: sweet }
           - { label: Drink, value: drink }
       - { name: photo, label: Photo, widget: image, required: false }
+      - { name: sourceUrl, label: Original link, widget: string, required: false, hint: 'TikTok, YouTube, a blog… where the recipe came from.', pattern: ['^https?://', 'Must start with http:// or https://'] }
+      - { name: sourceLabel, label: Link label, widget: string, required: false, hint: 'Optional. Leave blank to show the site name (TikTok, YouTube, nytimes.com…).' }
       - { name: photoAlt, label: Photo description, widget: string, required: false, hint: What's in the photo, for screen readers. }
       - { name: prepMinutes, label: Prep (minutes), widget: number, value_type: int, required: false, min: 0 }
       - { name: cookMinutes, label: Cook (minutes), widget: number, value_type: int, required: false, min: 0 }

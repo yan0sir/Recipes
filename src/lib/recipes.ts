@@ -28,6 +28,25 @@ export function formatMinutes(min: number | undefined): string {
   return m ? `${h} h ${m} min` : `${h} h`;
 }
 
+/** Friendly name for a source link: "TikTok", "YouTube", or the bare domain. */
+export function sourceName(url: string, label?: string): string {
+  if (label) return label;
+  try {
+    const host = new URL(url).hostname.replace(/^www\./, '');
+    const known: Record<string, string> = {
+      'tiktok.com': 'TikTok',
+      'vm.tiktok.com': 'TikTok',
+      'instagram.com': 'Instagram',
+      'youtube.com': 'YouTube',
+      'youtu.be': 'YouTube',
+      'pinterest.com': 'Pinterest',
+    };
+    return known[host] ?? host;
+  } catch {
+    return 'Original';
+  }
+}
+
 /** Stable colour variant for placeholders, from the slug. */
 export function placeholderVariant(slug: string): 0 | 1 | 2 {
   let h = 0;

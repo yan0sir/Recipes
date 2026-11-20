@@ -8,6 +8,7 @@ import {
   CATEGORY_LABELS,
   formatMinutes,
   getRecipes,
+  sourceName,
   totalMinutes,
   type Recipe,
 } from '../../lib/recipes';
@@ -59,7 +60,18 @@ function displayQty(raw: string): string {
 
   <article class="recipe" data-recipe={id} data-servings={data.servings}>
     <header class="head">
-      <a class="pill" href={`/?c=${data.category}`}>{CATEGORY_LABELS[data.category]}</a>
+      <div class="head-links">
+        <a class="pill" href={`/?c=${data.category}`}>{CATEGORY_LABELS[data.category]}</a>
+        {
+          data.sourceUrl && (
+            <a class="pill source" href={data.sourceUrl} target="_blank" rel="noopener noreferrer">
+              {sourceName(data.sourceUrl, data.sourceLabel)}
+              <Icon name="external" />
+              <span class="visually-hidden">(opens in a new tab)</span>
+            </a>
+          )
+        }
+      </div>
       <h1>{data.title}</h1>
       <p class="tagline">{data.tagline}</p>
 
@@ -237,6 +249,17 @@ function displayQty(raw: string): string {
     .head {
       max-width: none;
     }
+  }
+
+  .head-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+  }
+
+  .source :global(.icon) {
+    width: 16px;
+    height: 16px;
   }
 
   h1 {

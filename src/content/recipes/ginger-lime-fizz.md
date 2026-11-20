@@ -4,6 +4,7 @@ title: Ginger Lime Fizz
 tagline: Spicy, sour, sparkling.
 category: drink
 servings: 1
+sourceUrl: https://www.tiktok.com/@example/video/1234567890
 prepMinutes: 5
 ingredientGroups:
   - items:

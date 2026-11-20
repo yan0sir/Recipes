@@ -148,7 +148,7 @@ Order, top to bottom:
 1. Header band (sticky).
 2. **Hero**: full-bleed photo or placeholder.
 3. **Title** (display, Inter Tight) + **tagline** (one line).
-4. **Meta strip**: Prep · Cook · Total · Serves (Serves is the scaler). Category chip linking back to the filtered grid.
+4. **Meta strip**: Prep · Cook · Total · Serves (Serves is the scaler). Above the title: category chip linking back to the filtered grid, and, if set, a **source link** pill (e.g. "TikTok ↗") to the original recipe.
 5. **Cook-mode** toggle.
 6. **Ingredients**: grouped list with checkboxes; scaler acts on these.
 7. **Method**: numbered steps with tap-to-complete.
@@ -179,6 +179,8 @@ Browser-based editor (git-based CMS). Form fields map 1:1 to the content model b
 | `tagline` | text, ≤ 70 chars | yes | The one-liner; replaces any intro story |
 | `category` | single select | yes | `savory` · `sweet` · `drink` |
 | `photo` | image | no | Placeholder used if empty |
+| `sourceUrl` | URL | no | Original recipe (TikTok, YouTube, blog…). Shown as a pill at the top of the recipe page, opens in a new tab |
+| `sourceLabel` | text | no | Pill text; blank = site name from the URL ("TikTok", "nytimes.com") |
 | `prepMinutes` | number | no | |
 | `cookMinutes` | number | no | Total = prep + cook |
 | `servings` | number | yes | Base for the scaler |
