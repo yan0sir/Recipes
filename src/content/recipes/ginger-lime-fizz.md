@@ -2,40 +2,40 @@
 title: 30 Min Pizza
 tagline: bread, sour, sparkling.
 category: savory
-photo: ''
+photo: ../../assets/recipes/pasted-image-1795416666619.png
 sourceUrl: https://bromabakery.com/easy-30-minute-pizza-crust/
 sourceLabel: ''
 photoAlt: ''
-prepMinutes: 5
-cookMinutes: null
+prepMinutes: 40
+cookMinutes: 10
 servings: 4
 ingredientGroups:
   - heading: ''
     items:
-      - quantity: '2'
-        unit: cm
-        name: fresh ginger
-        note: grated
-      - quantity: 1/2
-        unit: ''
-        name: lime
-        note: juiced
-      - quantity: 1-2
+      - quantity: 2 1/4
+        unit: cups
+        name: Flour
+        note: ''
+      - quantity: '1'
+        unit: tbsp
+        name: Granulated Sugar
+        note: ''
+      - quantity: '1'
         unit: tsp
-        name: honey
+        name: Salt
         note: ''
-      - quantity: '200'
-        unit: ml
-        name: sparkling water
+      - quantity: '21'
+        unit: g
+        name: Instant Yeast
         note: ''
-      - quantity: ''
-        unit: ''
-        name: ice
+      - quantity: '1'
+        unit: cup
+        name: Warm Water
         note: ''
 steps:
   - Muddle the ginger, lime juice and honey in a glass.
   - Fill with ice and top with sparkling water. Stir once.
 notes: ''
-date: 2026-11-01
+date: 2026-11-23
 draft: false
 ---
