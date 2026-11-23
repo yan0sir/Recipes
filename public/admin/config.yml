@@ -45,8 +45,6 @@ collections:
       - { name: sourceLabel, label: Link label, widget: string, required: false, hint: 'Optional. Leave blank to show the site name (TikTok, YouTube, nytimes.com…).' }
       - { name: photoAlt, label: Photo description, widget: string, required: false, hint: What's in the photo, for screen readers. }
       - { name: prepMinutes, label: Prep time (minutes), widget: number, value_type: int, required: false, min: 0 }
-      - { name: restMinutes, label: Rest time (minutes), widget: number, value_type: int, required: false, min: 0, hint: 'Resting, rising, marinating, chilling…' }
-      - { name: cookMinutes, label: Cook time (minutes), widget: number, value_type: int, required: false, min: 0 }
       - { name: servings, label: Servings, widget: number, value_type: int, default: 2, min: 1 }
       - name: ingredientGroups
         label: Ingredients
@@ -74,6 +72,10 @@ collections:
         widget: list
         required: false
         field: { name: step, label: Step, widget: text }
+      - { name: restMinutes, label: Rest time (minutes), widget: number, value_type: int, required: false, min: 0, hint: 'Resting, rising, marinating, chilling…' }
+      - { name: restNotes, label: Rest time instructions, widget: text, required: false, hint: 'Shown as its own section after Method, e.g. "Cover and let rise somewhere warm."' }
+      - { name: cookMinutes, label: Cook time (minutes), widget: number, value_type: int, required: false, min: 0 }
+      - { name: cookNotes, label: Cook time instructions, widget: text, required: false, hint: 'Shown as its own section after Method, e.g. "Bake at 180°C until golden."' }
       - { name: notes, label: Notes, widget: text, required: false, hint: Tips, swaps, storage. Short. }
       - { name: date, label: Date added, widget: datetime, time_format: false, format: 'YYYY-MM-DD', default: '{{now}}' }
       - { name: draft, label: Draft (hide from site), widget: boolean, default: false, required: false }

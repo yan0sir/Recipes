@@ -191,6 +191,8 @@ Browser-based editor (git-based CMS). Form fields map 1:1 to the content model b
 | ↳ `item.name` | text | yes | "potato" |
 | ↳ `item.note` | text | no | "diced", "optional" |
 | `steps` | list of text | no | One step per entry, short. If empty, the Method section is hidden |
+| `restNotes` | long text | no | "Rest time" section after Method (with the rest minutes as a badge) |
+| `cookNotes` | long text | no | "Cook time" section after Method (with the cook minutes as a badge) |
 | `notes` | long text | no | Tips, substitutions, storage |
 | `date` | date | auto | Sort order on the grid |
 | `draft` | boolean | no | Hide from site while drafting |

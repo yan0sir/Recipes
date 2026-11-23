@@ -40,6 +40,8 @@ const recipes = defineCollection({
         )
         .min(1),
       steps: z.array(z.string().min(1)).optional().default([]),
+      restNotes: z.string().optional().default(''),
+      cookNotes: z.string().optional().default(''),
       notes: z.string().optional().default(''),
       date: z.coerce.date(),
       draft: z.boolean().optional().default(false),

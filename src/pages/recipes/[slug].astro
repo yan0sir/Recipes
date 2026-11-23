@@ -33,7 +33,12 @@ interface Props {
 const { recipe, newer, older } = Astro.props;
 const { data, id } = recipe;
 const total = totalMinutes(recipe);
-const hasMethod = data.steps.length > 0;
+const hasSteps = data.steps.length > 0;
+const phases = [
+  { key: 'rest', label: 'Rest time', min: data.restMinutes, text: data.restNotes },
+  { key: 'cook', label: 'Cook time', min: data.cookMinutes, text: data.cookNotes },
+].filter((p) => p.text);
+const hasMethod = hasSteps || phases.length > 0;
 const timeParts = [
   { label: 'Prep', min: data.prepMinutes },
   { label: 'Rest', min: data.restMinutes },
@@ -152,8 +157,8 @@ function displayQty(raw: string): string {
       </section>
 
       <section class="method" id="method" aria-labelledby={hasMethod ? 'method-h' : undefined}>
-        {hasMethod && <h2 id="method-h">Method</h2>}
-        {hasMethod && (
+        {hasSteps && <h2 id="method-h">Method</h2>}
+        {hasSteps && (
         <ol>
           {
             data.steps.map((step, si) => (
@@ -171,6 +176,16 @@ function displayQty(raw: string): string {
           }
         </ol>
         )}
+
+        {
+          phases.map((p) => (
+            <section class="phase" aria-labelledby={`${p.key}-h`}>
+              <h2 id={`${p.key}-h`}>{p.label}</h2>
+              {p.min != null && <p class="phase-min">{formatMinutes(p.min)}</p>}
+              <p class="phase-text">{p.text}</p>
+            </section>
+          ))
+        }
 
         {
           data.notes && (
@@ -564,6 +579,38 @@ function displayQty(raw: string): string {
 
   .step:has(input:checked) .step-text {
     opacity: 0.45;
+  }
+
+  .phase {
+    margin-top: var(--s-7);
+  }
+
+  .phase:first-child {
+    margin-top: 0;
+  }
+
+  .phase h2 {
+    margin-bottom: var(--s-2);
+  }
+
+  .phase-min {
+    display: inline-block;
+    margin: 0 0 var(--s-3);
+    padding: 2px var(--s-3);
+    background: var(--aubergine);
+    color: var(--lime);
+    font-weight: 500;
+    font-size: var(--fs-small);
+  }
+
+  .phase-text {
+    margin: 0;
+    white-space: pre-line;
+  }
+
+  :global(body.cook-mode) .phase-text {
+    font-size: var(--fs-cook);
+    line-height: 1.45;
   }
 
   .notes {
