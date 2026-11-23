@@ -1,6 +1,6 @@
 ---
 title: Brown Butter Chocolate Chip Cookies
-tagline: Nutty, chewy, slightly dangerous.
+tagline: Nutty, chewy
 category: sweet
 photo: ../../assets/recipes/pasted-image-1795178354969.png
 sourceUrl: https://bromabakery.com/best-chocolate-chip-cookies/
