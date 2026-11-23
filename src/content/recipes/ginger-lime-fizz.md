@@ -7,7 +7,6 @@ sourceUrl: https://bromabakery.com/easy-30-minute-pizza-crust/
 sourceLabel: ''
 photoAlt: ''
 prepMinutes: 40
-cookMinutes: 10
 servings: 4
 ingredientGroups:
   - heading: ''
@@ -35,6 +34,10 @@ ingredientGroups:
 steps:
   - Muddle the ginger, lime juice and honey in a glass.
   - Fill with ice and top with sparkling water. Stir once.
+restMinutes: 30
+restNotes: ''
+cookMinutes: 10
+cookNotes: ''
 notes: ''
 date: 2026-11-23
 draft: false
