@@ -1,9 +1,12 @@
 :root {
   /* Colour */
-  --aubergine: #3b1f3a;
-  --aubergine-80: #5a3a58;
-  --lime: #c8e64a;
-  --lime-soft: #e4f3a6;
+  /* Names kept from v1 for stability: --lime is now the orange accent, --aubergine the dark ink. */
+  --aubergine: #140a16;
+  --aubergine-80: #4a2d4e;
+  --lime: #e14905;
+  --lime-soft: #ecd8eb;
+  --band-bg: #ecd8eb;
+  --band-fg: #140a16;
   --paper: #e1d8bc;
   --ink: #1c1220;
   --ink-muted: #5c4f5b;

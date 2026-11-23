@@ -4,16 +4,22 @@ import { z } from 'astro/zod';
 
 export const CATEGORIES = ['savory', 'sweet', 'drink'] as const;
 
+// The editor saves empty optional fields as '' or null. Treat both as "not set".
+const blank = (v: unknown) => (v === '' || v === null ? undefined : v);
+const optText = z.preprocess(blank, z.string().optional().default(''));
+const optMinutes = z.preprocess(blank, z.number().int().nonnegative().optional());
+
 const quantity = z
   .union([z.string(), z.number()])
+  .nullable()
   .optional()
   .transform((v) => (v === undefined || v === null ? '' : String(v).trim()));
 
 const ingredient = z.object({
   quantity,
-  unit: z.string().optional().default(''),
+  unit: optText,
   name: z.string().min(1),
-  note: z.string().optional().default(''),
+  note: optText,
 });
 
 const recipes = defineCollection({
@@ -23,28 +29,31 @@ const recipes = defineCollection({
       title: z.string().min(1),
       tagline: z.string().max(70),
       category: z.enum(CATEGORIES),
-      photo: image().optional(),
-      photoAlt: z.string().optional().default(''),
-      sourceUrl: z.string().url().optional(),
-      sourceLabel: z.string().optional().default(''),
-      prepMinutes: z.number().int().nonnegative().optional(),
-      restMinutes: z.number().int().nonnegative().optional(),
-      cookMinutes: z.number().int().nonnegative().optional(),
+      photo: z.preprocess(blank, image().optional()),
+      photoAlt: optText,
+      sourceUrl: z.preprocess(blank, z.url().optional()),
+      sourceLabel: optText,
+      prepMinutes: optMinutes,
+      restMinutes: optMinutes,
+      cookMinutes: optMinutes,
       servings: z.number().int().positive(),
       ingredientGroups: z
         .array(
           z.object({
-            heading: z.string().optional().default(''),
+            heading: optText,
             items: z.array(ingredient).min(1),
           }),
         )
         .min(1),
-      steps: z.array(z.string().min(1)).optional().default([]),
-      restNotes: z.string().optional().default(''),
-      cookNotes: z.string().optional().default(''),
-      notes: z.string().optional().default(''),
+      steps: z.preprocess(
+        (v) => (Array.isArray(v) ? v.filter((x) => typeof x === 'string' && x.trim()) : blank(v)),
+        z.array(z.string()).optional().default([]),
+      ),
+      restNotes: optText,
+      cookNotes: optText,
+      notes: optText,
       date: z.coerce.date(),
-      draft: z.boolean().optional().default(false),
+      draft: z.preprocess(blank, z.boolean().optional().default(false)),
     }),
 });
 

@@ -78,7 +78,7 @@ input {
 }
 
 .band :focus-visible {
-  outline-color: var(--lime);
+  outline-color: var(--band-fg);
 }
 
 .visually-hidden {

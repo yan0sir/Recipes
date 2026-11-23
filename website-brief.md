@@ -52,10 +52,11 @@ Flat colours only: no gradients, no shadows. Colour marks *where you are*: the a
 
 | Token | Hex | Use |
 |---|---|---|
-| `--aubergine` | `#3B1F3A` | Header/footer band, primary text on lime, buttons |
-| `--aubergine-80` | `#5A3A58` | Hover/pressed on aubergine surfaces |
-| `--lime` | `#C8E64A` | Listing page background, active filter chip, accents on recipe page |
-| `--lime-soft` | `#E4F3A6` | Checked-off row tint, placeholder tile fill (alt) |
+| `--aubergine` | `#140A16` | Dark ink: text on orange, solid buttons, step squares (name kept from v1) |
+| `--aubergine-80` | `#4A2D4E` | Placeholder tile variant |
+| `--lime` | `#E14905` | Orange accent: home page background, step numbers, active chip text, notes rule (name kept from v1) |
+| `--band-bg` | `#ECD8EB` | Header/footer band (pale lilac), dark text |
+| `--lime-soft` | `#ECD8EB` | Checked-off row tint, placeholder tile fill |
 | `--paper` | `#E1D8BC` | Recipe page background (warm beige) |
 | `--ink` | `#1C1220` | Body text on paper |
 | `--ink-muted` | `#5C4F5B` | Meta labels, secondary text |
@@ -216,4 +217,4 @@ Contact, newsletter, About, comments, ratings, social sharing, user accounts, un
 
 ## 8. Open items
 
-- None. Site name: **Ray's Recipes**. Lime `#C8E64A` approved.
+- None. Site name: **Ray's Recipes**. Palette updated 2026-11-23: orange `#E14905`, lilac `#ECD8EB`, beige `#E1D8BC`. Favicon: `public/favicon.png` (pot icon).
