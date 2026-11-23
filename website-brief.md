@@ -31,7 +31,7 @@ A personal recipe book on the web. Its single job is to make **finding a recipe 
 
 | Potluck element | Our version |
 |---|---|
-| Flat solid colour bands (acid-yellow header/footer, green listing background, white recipe page) | Same structure, own palette: **aubergine** band, **lime** listing, **off-white** recipe page |
+| Flat solid colour bands (acid-yellow header/footer, green listing background, white recipe page) | Same structure, own palette: **aubergine** band, **lime** listing, **beige** recipe page |
 | Edge-to-edge 3-column grid of **square** photos with thin divider lines | Kept. Square tiles, hairline dividers, title + one-liner beneath |
 | Huge single-weight headline (~76px, tight tracking) | Kept, set in **Inter Tight** |
 | One-line playful tagline per recipe ("A little dark, a little stormy.") | Kept. One line, max ~70 characters. Replaces any intro story |
@@ -56,9 +56,9 @@ Flat colours only: no gradients, no shadows. Colour marks *where you are*: the a
 | `--aubergine-80` | `#5A3A58` | Hover/pressed on aubergine surfaces |
 | `--lime` | `#C8E64A` | Listing page background, active filter chip, accents on recipe page |
 | `--lime-soft` | `#E4F3A6` | Checked-off row tint, placeholder tile fill (alt) |
-| `--paper` | `#FBF9F3` | Recipe page background, card text area |
+| `--paper` | `#E1D8BC` | Recipe page background (warm beige) |
 | `--ink` | `#1C1220` | Body text on paper |
-| `--ink-muted` | `#6B5E6A` | Meta labels, secondary text |
+| `--ink-muted` | `#5C4F5B` | Meta labels, secondary text |
 | `--line` | `rgba(59,31,58,0.25)` | Hairline grid dividers, rules |
 
 Contrast pairs to use: aubergine on lime, lime on aubergine, ink on paper, paper on aubergine (all well above WCAG AA). **Never** lime text on paper.
@@ -182,14 +182,15 @@ Browser-based editor (git-based CMS). Form fields map 1:1 to the content model b
 | `sourceUrl` | URL | no | Original recipe (TikTok, YouTube, blog…). Shown as a pill at the top of the recipe page, opens in a new tab |
 | `sourceLabel` | text | no | Pill text; blank = site name from the URL ("TikTok", "nytimes.com") |
 | `prepMinutes` | number | no | |
-| `cookMinutes` | number | no | Total = prep + cook |
+| `restMinutes` | number | no | Resting, rising, marinating, chilling |
+| `cookMinutes` | number | no | Total = prep + rest + cook (only shown when 2+ times are set) |
 | `servings` | number | yes | Base for the scaler |
 | `ingredientGroups` | list of `{ heading?, items[] }` | yes | One unnamed group is fine |
 | ↳ `item.quantity` | text | no | Number or fraction: `2`, `1/2`, `1 1/2`. Blank = not scaled ("salt to taste") |
 | ↳ `item.unit` | text | no | Free text, **mixed units as written** (g, cup, tbsp, packet, can…). No conversion |
 | ↳ `item.name` | text | yes | "potato" |
 | ↳ `item.note` | text | no | "diced", "optional" |
-| `steps` | list of text | yes | One step per entry, short |
+| `steps` | list of text | no | One step per entry, short. If empty, the Method section is hidden |
 | `notes` | long text | no | Tips, substitutions, storage |
 | `date` | date | auto | Sort order on the grid |
 | `draft` | boolean | no | Hide from site while drafting |

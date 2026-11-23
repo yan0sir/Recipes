@@ -28,6 +28,7 @@ const recipes = defineCollection({
       sourceUrl: z.string().url().optional(),
       sourceLabel: z.string().optional().default(''),
       prepMinutes: z.number().int().nonnegative().optional(),
+      restMinutes: z.number().int().nonnegative().optional(),
       cookMinutes: z.number().int().nonnegative().optional(),
       servings: z.number().int().positive(),
       ingredientGroups: z
@@ -38,7 +39,7 @@ const recipes = defineCollection({
           }),
         )
         .min(1),
-      steps: z.array(z.string().min(1)).min(1),
+      steps: z.array(z.string().min(1)).optional().default([]),
       notes: z.string().optional().default(''),
       date: z.coerce.date(),
       draft: z.boolean().optional().default(false),

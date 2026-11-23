@@ -33,6 +33,13 @@ interface Props {
 const { recipe, newer, older } = Astro.props;
 const { data, id } = recipe;
 const total = totalMinutes(recipe);
+const hasMethod = data.steps.length > 0;
+const timeParts = [
+  { label: 'Prep', min: data.prepMinutes },
+  { label: 'Rest', min: data.restMinutes },
+  { label: 'Cook', min: data.cookMinutes },
+].filter((t) => t.min != null);
+const times = timeParts.length > 1 ? [...timeParts, { label: 'Total', min: total }] : timeParts;
 
 function displayQty(raw: string): string {
   const parsed = parseQuantity(raw);
@@ -76,18 +83,14 @@ function displayQty(raw: string): string {
       <p class="tagline">{data.tagline}</p>
 
       <dl class="meta">
-        <div>
-          <dt>Prep</dt>
-          <dd>{formatMinutes(data.prepMinutes)}</dd>
-        </div>
-        <div>
-          <dt>Cook</dt>
-          <dd>{formatMinutes(data.cookMinutes)}</dd>
-        </div>
-        <div>
-          <dt>Total</dt>
-          <dd>{formatMinutes(total)}</dd>
-        </div>
+        {
+          times.map((t) => (
+            <div>
+              <dt>{t.label}</dt>
+              <dd>{formatMinutes(t.min)}</dd>
+            </div>
+          ))
+        }
         <div class="serves">
           <dt>Serves</dt>
           <dd>
@@ -114,11 +117,11 @@ function displayQty(raw: string): string {
       <p class="cook-note" data-cook-note hidden>Your browser may still let the screen sleep.</p>
     </header>
 
-    <div class="body">
+    <div class="body" class:list={{ 'body--no-method': !hasMethod }}>
       <section class="ingredients" aria-labelledby="ing-h">
         <div class="ingredients-inner">
           <h2 id="ing-h">Ingredients</h2>
-          <a class="jump" href="#method">Jump to method</a>
+          {hasMethod && <a class="jump" href="#method">Jump to method</a>}
           {
             data.ingredientGroups.map((group, gi) => (
               <div class="group">
@@ -148,8 +151,9 @@ function displayQty(raw: string): string {
         </div>
       </section>
 
-      <section class="method" id="method" aria-labelledby="method-h">
-        <h2 id="method-h">Method</h2>
+      <section class="method" id="method" aria-labelledby={hasMethod ? 'method-h' : undefined}>
+        {hasMethod && <h2 id="method-h">Method</h2>}
+        {hasMethod && (
         <ol>
           {
             data.steps.map((step, si) => (
@@ -166,6 +170,7 @@ function displayQty(raw: string): string {
             ))
           }
         </ol>
+        )}
 
         {
           data.notes && (
@@ -276,8 +281,8 @@ function displayQty(raw: string): string {
   }
 
   .meta {
-    display: grid;
-    grid-template-columns: repeat(3, auto) 1fr;
+    display: flex;
+    flex-wrap: wrap;
     margin: var(--s-6) 0 0;
     border-top: 1px solid var(--line);
     border-bottom: 1px solid var(--line);
@@ -295,19 +300,19 @@ function displayQty(raw: string): string {
   }
 
   @media (max-width: 520px) {
-    .meta {
-      grid-template-columns: repeat(3, 1fr);
-    }
     .meta > div {
+      flex: 1 1 0;
       padding-right: var(--s-3);
       margin-right: var(--s-3);
     }
-    .meta > div:nth-child(3) {
+    .meta > div:has(+ .serves) {
       border-right: 0;
       margin-right: 0;
     }
     .meta > .serves {
-      grid-column: 1 / -1;
+      flex-basis: 100%;
+    }
+    .meta > div + .serves {
       border-top: 1px solid var(--line);
     }
   }
@@ -398,6 +403,12 @@ function displayQty(raw: string): string {
     .body {
       grid-template-columns: minmax(280px, 1fr) 2fr;
       gap: var(--s-8);
+    }
+    .body--no-method {
+      grid-template-columns: minmax(0, var(--read));
+    }
+    .body--no-method .ingredients-inner {
+      position: static;
     }
     .ingredients-inner {
       position: sticky;

@@ -15,9 +15,10 @@ export async function getRecipes(): Promise<Recipe[]> {
 }
 
 export function totalMinutes(r: Recipe): number | undefined {
-  const { prepMinutes, cookMinutes } = r.data;
-  if (prepMinutes == null && cookMinutes == null) return undefined;
-  return (prepMinutes ?? 0) + (cookMinutes ?? 0);
+  const parts = [r.data.prepMinutes, r.data.restMinutes, r.data.cookMinutes].filter(
+    (m): m is number => m != null,
+  );
+  return parts.length ? parts.reduce((a, b) => a + b, 0) : undefined;
 }
 
 export function formatMinutes(min: number | undefined): string {
