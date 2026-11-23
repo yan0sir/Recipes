@@ -1,29 +1,41 @@
 ---
-# SAMPLE recipe for building the site. Delete once real recipes are in.
-title: Ginger Lime Fizz
-tagline: Spicy, sour, sparkling.
-category: drink
-servings: 1
-sourceUrl: https://www.tiktok.com/@example/video/1234567890
+title: 30 Min Pizza
+tagline: bread, sour, sparkling.
+category: savory
+photo: ''
+sourceUrl: https://bromabakery.com/easy-30-minute-pizza-crust/
+sourceLabel: ''
+photoAlt: ''
 prepMinutes: 5
+cookMinutes: null
+servings: 4
 ingredientGroups:
-  - items:
-      - quantity: "2"
+  - heading: ''
+    items:
+      - quantity: '2'
         unit: cm
         name: fresh ginger
         note: grated
-      - quantity: "1/2"
+      - quantity: 1/2
+        unit: ''
         name: lime
         note: juiced
-      - quantity: "1-2"
+      - quantity: 1-2
         unit: tsp
         name: honey
-      - quantity: "200"
+        note: ''
+      - quantity: '200'
         unit: ml
         name: sparkling water
-      - name: ice
+        note: ''
+      - quantity: ''
+        unit: ''
+        name: ice
+        note: ''
 steps:
   - Muddle the ginger, lime juice and honey in a glass.
   - Fill with ice and top with sparkling water. Stir once.
+notes: ''
 date: 2026-11-01
+draft: false
 ---
