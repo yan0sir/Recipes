@@ -1,6 +1,6 @@
 ---
 title: 30 Min Pizza
-tagline: bread, sour, sparkling.
+tagline: bread, pizza
 category: savory
 photo: ../../assets/recipes/pasted-image-1795416666619.png
 sourceUrl: https://bromabakery.com/easy-30-minute-pizza-crust/
