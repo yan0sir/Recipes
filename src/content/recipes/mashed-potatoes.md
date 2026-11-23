@@ -3,7 +3,7 @@ title: Mashed potatoes
 tagline: Creamy mashed potatos
 category: savory
 photo: ''
-sourceUrl: ''
+sourceUrl: https://www.provecho.bio/@thatsavagekitchen/fluffy-garlic-mashed-potatoes
 sourceLabel: ''
 photoAlt: ''
 prepMinutes: 30
