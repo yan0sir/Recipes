@@ -12,11 +12,11 @@ servings: 12
 ingredientGroups:
   - heading: Dough
     items:
-      - quantity: '115'
+      - quantity: '168'
         unit: g
         name: butter
         note: browned and cooled
-      - quantity: '100'
+      - quantity: '212'
         unit: g
         name: brown sugar
         note: ''
@@ -24,7 +24,7 @@ ingredientGroups:
         unit: g
         name: white sugar
         note: ''
-      - quantity: '1'
+      - quantity: '2'
         unit: ''
         name: egg
         note: ''
@@ -32,23 +32,23 @@ ingredientGroups:
         unit: tsp
         name: vanilla
         note: ''
-      - quantity: '150'
+      - quantity: '220'
         unit: g
         name: flour
         note: ''
-      - quantity: 1/2
+      - quantity: 3/4
         unit: tsp
         name: baking soda
         note: ''
-      - quantity: 1/2
+      - quantity: 3/4
         unit: tsp
         name: salt
         note: ''
   - heading: To finish
     items:
-      - quantity: '120'
+      - quantity: '210'
         unit: g
-        name: dark chocolate
+        name: Chocolate Bar
         note: chopped
       - quantity: ''
         unit: ''
